@@ -1,0 +1,126 @@
+---
+title: "HW2_nh2706"
+author: "Niklas Hess"
+date: 2022-10-02
+output: github_document
+---
+
+```{r, message = FALSE, echo = FALSE}
+library(tidyverse)
+```
+
+# Problem 1
+
+**Omitted answer, as solutions have already been provided**
+
+# Problem 2
+
+# Problem 3
+
+## 3.1) pols-month.csv related tasks
+
+```{r}
+# Loading the data and cleaning the variables
+polsm_df = read_csv("./Data/pols-month.csv", show_col_types = FALSE) %>%
+  janitor::clean_names() %>%
+
+# Separating variable MON into individual pieces
+  separate(mon, into = c("year", "month", "day")) %>%
+
+# Arranging entire dataset based on the year and month
+  arrange(year, as.integer(month)) %>%
+  
+# Replacing month number with month name and creating a president variable taking values gop and dem
+  mutate(year = as.integer(year),
+         month = month.name[as.integer(month)],
+         president = if_else(prez_dem == 1, "dem", "gop")
+         ) %>%
+
+# Removing prez_dem, prez_gop, and day variables
+  select(-day, -prez_dem, -prez_gop)
+```
+
+## 3.2) snp.csv related tasks
+
+```{r}
+# Loading the data and cleaning the variables
+snp_df = read_csv("./Data/snp.csv", show_col_types = FALSE) %>%
+  janitor::clean_names() %>%
+
+# Separating variable DATE into individual pieces, and modifying years to show long version
+  separate(date, into = c("month", "day", "year")) %>%
+  mutate(year = as.integer(year),
+         month = as.integer(month),
+         year = ifelse(year >= 23, year + 1900, year + 2000)
+         ) %>%
+
+# Arranging according to year and month, organizing so that year and month are the leading columns, and converting month to long-format
+  relocate(year) %>%
+  arrange(year, month) %>%
+  mutate(month = month.name[as.integer(month)]) %>%
+
+# Removing day variables
+  select(-day)
+```
+
+## 3.3) unemployment.csv related tasks
+
+```{r}
+# Loading the data
+unemployment_df = read_csv("./Data/unemployment.csv", show_col_types = FALSE) %>%
+
+# Switching from “wide” to “long” format
+  pivot_longer("Jan":"Dec",
+        names_to = "month",
+        values_to = "unemployment"
+        ) %>%
+
+# Ensuring that key variables have the same name, and take the same values
+  janitor::clean_names() %>%
+  mutate( month = month.name[match(month, month.abb)],
+          year = as.integer(year)
+         )
+```
+
+## 3.4) Merging Datasets
+
+```{r, message = FALSE}
+# Merging snp into pols
+alldata_df = full_join(polsm_df, snp_df)
+
+# Merging unemployment into the result
+alldata_df = full_join(alldata_df, unemployment_df)
+```
+
+
+## 3.5) Summary of datasets
+
+-   The `pols-month.csv` dataset details:
+    -   Dimensions:
+        -   The dataset has `r nrow(polsm_df)` 
+        -   The dataset has `r ncol(polsm_df)`
+    -   The years within the dataset range from `r min(polsm_df$year)` to `r max(polsm_df$year)`
+    -   The key variables are `r names(polsm_df)`
+
+-   The `snp.csv` dataset details:
+    -   Dimensions:
+        -   The dataset has `r nrow(snp_df)` 
+        -   The dataset has `r ncol(snp_df)`
+    -   The years within the dataset range from `r min(snp_df$year)` to `r max(snp_df$year)`
+    -   The key variables are `r names(snp_df)`
+
+-   The `unemployment.csv` dataset details:
+    -   Dimensions:
+        -   The dataset has `r nrow(unemployment_df)` 
+        -   The dataset has `r ncol(unemployment_df)`
+    -   The years within the dataset range from `r min(unemployment_df$year)` to `r max(unemployment_df$year)`
+    -   The key variables are `r names(unemployment_df)`
+
+-   The `merged` dataset details:
+    -   Dimensions:
+        -   The dataset has `r nrow(alldata_df)` 
+        -   The dataset has `r ncol(alldata_df)`
+    -   The years within the dataset range from `r min(alldata_df$year)` to `r max(alldata_df$year)`
+    -   The key variables are `r names(alldata_df)`
+
+# END OF HW2
