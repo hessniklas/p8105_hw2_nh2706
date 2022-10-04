@@ -16,6 +16,57 @@ library(readxl)
 
 # Problem 2
 
+This Problem uses the Mr. Trash Wheel Dataset:
+
+```{r}
+# Reading the data, selecting the specific Excel Sheet and range, and cleaning the names
+Mrt_df = read_excel("./data/Trash Wheel Collection Data.xlsx",
+    sheet = "Mr. Trash Wheel",
+    range = "A2:N549") %>% 
+  janitor::clean_names() %>% 
+  
+# Omitting rows that do not include dumpster-specific data and rounding the number of sports balls to the nearest integer
+  drop_na("dumpster") %>% 
+  mutate(sports_balls = round(sports_balls, 0),
+         sports_balls = as.integer(sports_balls),
+         year = as.integer(year))
+```
+
+```{r}
+# Reading the data, selecting the specific Excel Sheet and range, and cleaning the names
+Proft_df = read_excel("./data/Trash Wheel Collection Data.xlsx",
+    sheet = "Professor Trash Wheel",
+    range = "A2:M96") %>%  
+  janitor::clean_names() %>% 
+  
+# Omitting rows that do not include dumpster-specific data
+  drop_na("dumpster")
+```
+
+
+```{r}
+# Adding a new ID variable to the dataset, which replaces the dumpster variable
+Mrt_df =
+  mutate(Mrt_df, origin = "M", .before = "dumpster")  %>% 
+  unite('Id', origin:dumpster, sep = "", remove = TRUE)
+
+# Adding a new ID variable to the dataset, which replaces the dumpster variable
+Proft_df =
+  mutate(Proft_df, origin = "P", .before = "dumpster")  %>% 
+  unite('Id', origin:dumpster, sep = "", remove = TRUE)
+
+# Combining both datasets, by stacking them on top of one another
+Combintrash_df = bind_rows(Mrt_df, Proft_df) %>% 
+  janitor::clean_names()
+```
+
+After conducting the above operations, the following information can be found:
+
+-   There are `r nrow(Combintrash_df)` observations in the combined dataset
+-   Key variables are: `r names(Combintrash_df)`
+-   The total weight of trash collected by Professor Trash Wheel was `r sum(Proft_df$weight_tons)` tons
+-   In 2020, Mr. Trash Wheel collected `r sum(pull(filter(Mrt_df, year == 2020), sports_balls))` sports balls
+
 # Problem 3
 
 ## 3.1) pols-month.csv related tasks
