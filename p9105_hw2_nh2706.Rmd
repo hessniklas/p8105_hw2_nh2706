@@ -7,6 +7,7 @@ output: github_document
 
 ```{r, message = FALSE, echo = FALSE}
 library(tidyverse)
+library(readxl)
 ```
 
 # Problem 1
