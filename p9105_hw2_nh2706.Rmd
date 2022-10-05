@@ -148,30 +148,34 @@ alldata_df = full_join(alldata_df, unemployment_df)
 ## 3.5) Summary of datasets
 
 -   The `pols-month.csv` dataset details:
+    -   This dataset contains information on the number of republican vs. democratic senators, governors, representatives, and presidents starting in `r min(polsm_df$year)`
     -   Dimensions:
-        -   The dataset has `r nrow(polsm_df)` 
-        -   The dataset has `r ncol(polsm_df)`
+        -   The dataset has `r nrow(polsm_df)` rows
+        -   The dataset has `r ncol(polsm_df)` columns
     -   The years within the dataset range from `r min(polsm_df$year)` to `r max(polsm_df$year)`
     -   The key variables are `r names(polsm_df)`
 
 -   The `snp.csv` dataset details:
+    -   This dataset indicates the closing price of the SNP each month since `r min(snp_df$year)`
     -   Dimensions:
-        -   The dataset has `r nrow(snp_df)` 
-        -   The dataset has `r ncol(snp_df)`
+        -   The dataset has `r nrow(snp_df)` rows
+        -   The dataset has `r ncol(snp_df)` columns
     -   The years within the dataset range from `r min(snp_df$year)` to `r max(snp_df$year)`
     -   The key variables are `r names(snp_df)`
 
 -   The `unemployment.csv` dataset details:
+    -   This dataset shows the unemployment level every month since `r min(unemployment_df$year)`
     -   Dimensions:
-        -   The dataset has `r nrow(unemployment_df)` 
-        -   The dataset has `r ncol(unemployment_df)`
+        -   The dataset has `r nrow(unemployment_df)` rows
+        -   The dataset has `r ncol(unemployment_df)` columns
     -   The years within the dataset range from `r min(unemployment_df$year)` to `r max(unemployment_df$year)`
     -   The key variables are `r names(unemployment_df)`
 
 -   The `merged` dataset details:
+    -   This dataset is a combination of the previous 3 datasets.
     -   Dimensions:
-        -   The dataset has `r nrow(alldata_df)` 
-        -   The dataset has `r ncol(alldata_df)`
+        -   The dataset has `r nrow(alldata_df)` rows
+        -   The dataset has `r ncol(alldata_df)` columns
     -   The years within the dataset range from `r min(alldata_df$year)` to `r max(alldata_df$year)`
     -   The key variables are `r names(alldata_df)`
 
